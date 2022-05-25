@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+
+<meta charset="UTF-8" name="viewport" content="width=device-width, initial-scale=1">
+
+<html lang="en">
+    <title>Falling Sand</title>
+    <body>
+        <link rel="stylesheet" href="style.css">
+
+        <canvas id="canvas" width="400px" height="400px" style="border-color: black;"></canvas>
+
+        <script type="text/javascript" src="element config.js"></script>
+        <script type="text/javascript" src="Variables.js"></script>
+        <script type="text/javascript" src="canvas translation.js"></script>
+        <script type="text/javascript" src="app lab translation.js"></script>
+        <script type="text/javascript" src="initialize.js"></script>
+
+        <script type="text/javascript" src="tools.js"></script>
+        <script type="text/javascript" src="user interface.js"></script>
+        <script type="text/javascript" src="buttons.js"></script>
+        <script type="text/javascript" src="display.js"></script>
+        
+        <script type="text/javascript" src="secrets.js"></script>
+        <script type="text/javascript" src="elements.js"></script>
+        <script type="text/javascript" src="iteration.js"></script>
+
+        <button type="button" class="elementButton" id="label" style="width:auto;font-family: Impact, Haettenschweiler, 'Arial Narrow Bold', sans-serif;">AIR</button>
+
+        <button type="button" class="elementButton" id="air" aria-label="air" style="background-color:white;top:6%;border-color: #BAE3F2;" onclick="buton('air','AIR','rgb(187, 187, 187)');"></button>
+        <button type="button" class="elementButton" id="sand" aria-label="sand" style="background-color:#FFE0AB;top:11%;" onclick="buton('sand','SAND','#f3ce93');"></button>
+        <button type="button" class="elementButton" id="water" aria-label="water" style="background-color:#309BE4;top:16%;" onclick='buton("water","WATER","#309BE4");'></button>
+        <button type="button" class="elementButton" id="wood" aria-label="wood" style="background-color:#675045;top:21%;" onclick='buton("wood","WOOD","#6b3a18");'></button>
+        <button type="button" class="elementButton" id="fire" aria-label="fire" style="background-color:#FFAE39;top:26%;" onclick='buton("fire","FIRE","#FFAE39");'></button>
+        <button type="button" class="elementButton" id="smoke" aria-label="smoke" style="background-color:#B9B9B9;top:31%;" onclick='buton("smoke","SMOKE","#B9B9B9");'></button>
+        <button type="button" class="elementButton" id="lava" aria-label="lava" style="background-color:orange;top:36%;" onclick='buton("lava","LAVA","orange");'></button>
+        <button type="button" class="elementButton" id="stone" aria-label="stone" style="background-color:grey;top:41%;" onclick='buton("stone","STONE","gray");'></button>
+        <button type="button" class="elementButton" id="moss" aria-label="moss" style="background-color:green;top:46%;" onclick='buton("moss","MOSS","green");'></button>
+        <button type="button" class="elementButton" id="drysponge" aria-label="Name" style="background-color:#ecf22e;top:51%;" onclick='buton("drysponge","DRY SPONGE","#ecf22e");'></button>
+        <button type="button" class="elementButton" id="wetsponge" aria-label="Name" style="background-color:#b3aa2e;top:56%;" onclick='buton("wetsponge","WET SPONGE","#b3aa2e");'></button>
+        <button type="button" class="elementButton" id="paint" aria-label="Name" style="background-color:red;top:61%;" onclick='buton("paint","PAINT",paintColor);'></button>
+        <button type="button" class="elementButton" id="bugs" aria-label="Name" style="background-color:#414141;top:66%;" onclick='buton("bugs","BUGS","#414141");'></button>
+
+    </body>
+</html>
+    
