@@ -16,9 +16,12 @@ const elements = 11; //the number of elements, change this if you add more eleme
 
 const delay = 10; //ms between each uh frame
 
-var currentElement='burning';
+var currentElement='air';
 
 //index/chunk rendering jarble
+
+var queue = []; //queue is a 3d list, at the end of each iteration, the items in queue are updated to board. used for elements where you must be specific and cant just slide acroos.
+//formatted like this: [x, y, element]
 
 var chunks = [];
 var falseChunks=[]; //evil chunks be like:

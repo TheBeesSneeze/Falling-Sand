@@ -36,7 +36,7 @@ const elementList={
       colors:["#bdb65b","#b3aa2e","#cfc211"],
     },
     lava: {
-      colors:["orange"],
+      colors:["#B62203","orange"],
     },
     paint: {
       colors:['red'],
@@ -46,13 +46,16 @@ const elementList={
     },
     deadfly: {
       colors:['#333333','#565656','#CFCFCF'],
-    }
+    },
+    magic: {
+      colors:['magenta'],
+    },
   }
 
 
 //if thirstySponges is true, dry  sponges will never become wet
 const thirstySponges=false;
-var drippySpongeCheck = false; //DONT FUCK WITH DRIPPY SPONGE CHECK WHATEVER YOU DO
+var drippySpongeCheck = false; //DONT MESS WITH DRIPPY SPONGE CHECK WHATEVER YOU DO
 
 const burningToFireChance=125;
 const fireToSmokeChance=75;
@@ -61,6 +64,8 @@ const wetSpongeChance=10; //when dry sponge absorbs water, there is a 1 in wetSp
 const wetSpongeDripChance=50;
 
 const spongeRadius = 2; //how many spaces in each direction a sponge will try to dry water
+
+const dangerousMagic = true; //based on a glitch from when i was making magic
 
 // everything from this point onwards is colors
 

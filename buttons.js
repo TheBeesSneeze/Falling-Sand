@@ -11,8 +11,12 @@ function buton(id,name,color){ //its so much easier to have the buttons just upd
 
     setText('label',name);
     setProperty('label','background-color',color);
-    //setProperty(id+"button","border-color","#BAE3F2");
-    //setProperty("selectionDisplay","text-color",color);
+    
+    if(id=='paint'){
+      paintColor=randomColor(paintTransparency);
+      setProperty("paint","background-color",paintColor);
+      setProperty("label","background-color",paintColor);
+    }
   }
 
 //changes the color of all the buttons

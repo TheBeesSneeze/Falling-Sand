@@ -4,10 +4,10 @@
 const sandPassThrough =  ['air','water','fire','smoke','paint','fly','deadfly'];
 //(1) if space below sand is air/water/smoke, they will swap. if it cant fall, itll try to fall to its sides
 function sand(){
-    //if randy is 'air', the sand wont fall, to create a more random lookin effect.
-    if(randomNumber(100)!='air'){
-      if (passThrough(board[x][y+1], sandPassThrough)){
-        if(passThrough(board[x][y+2],sandPassThrough)){//MAKE THIS A FUNCTION PLEASE
+    //if randy is 1, the sand wont fall, to create a more random lookin effect.
+    if(randomNumber(100)!=1){
+      if (passThrough(board[x][y+1],sandPassThrough)){
+        if(passThrough(board[x][y+2],sandPassThrough)){
           swap(x,y,x,y+2);
           return;
         }
@@ -504,5 +504,57 @@ function deadFly(){
   if(passThrough(board[x][y-1], ['water','paint']) && Math.random() < 0.2){
     swap(x,y,x,y-1);
     return;
+  }
+}
+
+//literally conways game of life lol. btw air counts as a dead cell. literally any other cell is considered alive.
+function magic(){
+  var neighbors = getNeighbors(x,y);// [alive, dead]
+
+  //first, check surrounding air elements to see if they should be alive (cells might be checked twice, thats okay)
+  if(neighbors[1] > 0){//effishenchy (skip on checking air elements if there is no air )
+    for(var a=x-1;a<=x+1;a++){
+      for(var b=y-1;b<=y+1;b++){
+        if(withinBounds(a,b) && !(x==a && y==b)){
+          if(board[a][b]=='air'){
+            deadCells(a,b);
+          }
+        }
+      }
+    }
+  }
+
+  //a cell will live on if it has 2 or 3 neighbors
+  if(neighbors[0] != 2 && neighbors[0] != 3){
+    queue.push([x,y,'air']);
+  }
+}
+//returns a list containing qty of alive neighbors[ index 0 ] and the qty of dead neighbors [index 1], with a and b being the center
+function getNeighbors(a,b){
+  var dead=0;
+  var alive=0;
+  for(var i=a-1;i<=a+1;i++){
+    for(var j=b-1;j<=b+1;j++){
+      if(withinBounds(i,j) && !(i==a && j==b)){
+        if(board[i][j] == 'air' || board[i][j] == 'dead'){
+          dead++;
+        }
+        else{
+          alive++;
+        }
+      }
+    }
+  }
+  return([alive,dead]);
+}
+//a dead cell with exactly 3 neighbors will come to life
+function deadCells(a,b){
+  var neighbors=getNeighbors(a,b);
+  
+  if(neighbors[0]==3){
+    if(!dangerousMagic){
+      board[a][b]="dead";
+    }
+    queue.push([a,b,'magic']);
   }
 }
