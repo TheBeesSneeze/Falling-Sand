@@ -36,7 +36,7 @@ const elementList={
       colors:["#bdb65b","#b3aa2e","#cfc211"],
     },
     lava: {
-      colors:["orange"],
+      colors:["#B62203","orange"],
     },
     paint: {
       colors:['red'],

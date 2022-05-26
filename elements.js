@@ -6,8 +6,8 @@ const sandPassThrough =  ['air','water','fire','smoke','paint','fly','deadfly'];
 function sand(){
     //if randy is 'air', the sand wont fall, to create a more random lookin effect.
     if(randomNumber(100)!='air'){
-      if (passThrough(board[x][y+1], sandPassThrough)){
-        if(passThrough(board[x][y+2],sandPassThrough)){//MAKE THIS A FUNCTION PLEASE
+      if (passThrough(board[x][y+1],sandPassThrough)){
+        if(passThrough(board[x][y+2],sandPassThrough)){
           swap(x,y,x,y+2);
           return;
         }

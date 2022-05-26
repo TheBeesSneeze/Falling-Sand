@@ -9,11 +9,6 @@ var offset = 1;
 //     V
 can.onclick = function clickEvent(e) {
     clicking = !clicking;
-    if(clicking && currentElement=='paint'){
-        paintColor=randomColor(paintTransparency);
-        setProperty("paint","background-color",paintColor);
-        setProperty("label","background-color",paintColor);
-    }
 }
 
 can.onmousemove = function clickEvent(e) {
