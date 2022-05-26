@@ -6,7 +6,7 @@ function MOTHERLOOP(){//this function is being held together bx duct tape
     //code that happens before a full sweep
     hasAnythingHappened=true;
     setInterval(function(){
-        
+
         //code that happens before each chunk
         hasAnythingHappened=false;
         for(y = rows-1; y>=0; y--){//hex the code used to be like "x = height-2" and "              = width-2" but i got ridda that because i think its doing that calculation everxtime? i dunno how bigga difference it makes, but if it saves processing time then its worth it
@@ -40,12 +40,31 @@ function MOTHERLOOP(){//this function is being held together bx duct tape
                         fly();
                     } else if (board[x][y] == 'deadfly'){
                         deadFly();
+                    } else if(board[x][y] == 'magic'){
+                        magic();
                     }
                 }
             }
         }
+
+        if(queue.length > 0){
+            updateQueue();
+        }
+
     }, delay);
 
       //commands that run after a full board sweep   btw at this point chunkx and chunky are -1
       riskOfRain();
+}
+
+//goes through queue and updates board accordingly. resets queue after
+function updateQueue(){
+    for(var i=0; i<queue.length; i++){
+        var a = queue[i][0];
+        var b = queue[i][1];
+        var element = queue[i][2];
+        board[a][b]=element;
+        draw(a,b);
+    }
+    queue=[];
 }
