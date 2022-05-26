@@ -65,7 +65,7 @@ const wetSpongeDripChance=50;
 
 const spongeRadius = 2; //how many spaces in each direction a sponge will try to dry water
 
-const dangerousMagic = true; //based on a glitch from when i was making magic
+const dangerousMagic = false; //based on a glitch from when i was making magic
 
 // everything from this point onwards is colors
 
