@@ -12,18 +12,6 @@ setStrokeColor(rgb(0,0,0,0));//i wonder if this line is even needed
 var board=blankList();
 //var newBoard=board;
 
-//board[10][10]="magic";
-//board[11][11]="magic";
-//board[12][11]="magic";
-//board[12][10]="magic";
-//board[12][9]="magic";
-
-board[12][12]="magic";
-board[13][13]="magic";
-board[14][13]="magic";
-board[12][14]="magic";
-board[13][14]="magic";
-
 //returns a blank list full of air, it also has a border
 function blankList(){//call this at the beggining of each function, it creates a list thats only zeros
     var temp=[];

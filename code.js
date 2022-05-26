@@ -1,11 +1,11 @@
-//i think i cut and pasted everything from this function... its all gone...
+//this is getting out of hand
 
 //NOTES:
 // If you're reading this, hello! Thank you for looking at the code I really appreciate it.
 //
 // Every line of code here was written by me, and it shows.
 // I'm just gonna apologize in advance, a LOT of comments here are out of date. This code 
-// has gone through SO many massive changes... Not to mention that a lot of the comments    //-are out of date? i left this comment unfinished... fitting
+// has gone through SO many massive changes... Not to mention that a lot of the comments 
 // are just sorta ramblings that make sense to me? yeah like half the comments are just me
 // writing about my feelings rather than anything else.
 // This all started as a person passion project/ learning experience, but I'm pretty sure I'm
@@ -41,10 +41,10 @@
 // make chunks a 2d array instead of boolean
 // you might be able to make draw a little faster by rearranging the elements IDs and grouping the indexs that change colors together and having it be like 'if(board[x][y] > 0 && <4)'
 // make moss its own function and make it check for moss before water
- // also a wood function 
-  // what?
+ // also a wood function
 // make thems little debug squares a part of draw() instead of swap()
 // make the motherloop a part of the onevent for start button and a timed for loop on a remixed version
+// make a newCanvas function (library maychance?) and optimize a lot
 // i dont remember how i made the thing that fills the screen work, but you could probably easily touch up blankBoard to make optimize that little bit
 // ok hear me out: chunks of chunks.
 // rework moss to be more moss-like
