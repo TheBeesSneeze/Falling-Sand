@@ -50,12 +50,14 @@ const elementList={
     magic: {
       colors:['magenta'],
     },
+    na:{
+      colors:["rgb(0,0,0,0)"],
+    }
   }
 
 
 //if thirstySponges is true, dry  sponges will never become wet
 const thirstySponges=false;
-var drippySpongeCheck = false; //DONT MESS WITH DRIPPY SPONGE CHECK WHATEVER YOU DO
 
 const burningToFireChance=125;
 const fireToSmokeChance=75;

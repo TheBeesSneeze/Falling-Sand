@@ -1,6 +1,6 @@
-const ratio = 20;//increase this number to make there be more elements and visa versa
+const ratio = 25;//increase this number to make there be more elements and visa versa
 
-const widthRatio = 16;
+const widthRatio = 15;
 const heightRatio = 9;
 
 const columns = widthRatio*ratio;//Math.round(canvasWidth/5);
@@ -12,11 +12,11 @@ const chunkSize=5;
 const canvasWidth = columns*cellSize;
 const canvasHeight = rows*cellSize;
 
-const elements = 11; //the number of elements, change this if you add more elements
-
+var paused = false;
 const delay = 10; //ms between each uh frame
 
 var currentElement='air';
+const simpleFill = false; //theres two fill types: efficient and simple. simple fill makes diamonds, efficient is messy but fills a lot more. neither of them are really good tbh.
 
 //index/chunk rendering jarble
 
@@ -52,6 +52,8 @@ var y = 0;
 //user augmented variables
 //index should be here but quite frankly i do not know where that little rascal went to
 var cursorSize=5; //size of cursor (wow)
+var mode = 'brush';
+
 var debugMode = false;
 var rainCheck = false;
 var corruption = false;

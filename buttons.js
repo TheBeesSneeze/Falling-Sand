@@ -1,5 +1,9 @@
-function buton(id,name,color){ //its so much easier to have the buttons just update the main AND info screen im sorry but im lazy
-    if(currentElement==id){
+//fill is if the board should be filled if the same element is selected twice (true by default)
+function buton(id,name,color,fill){ //its so much easier to have the buttons just update the main AND info screen im sorry but im lazy
+  if(fill == undefined){
+    fill = true;
+  }  
+  if(currentElement==id && fill){
       fillBoard(id);
       return;
     }
@@ -21,7 +25,8 @@ function buton(id,name,color){ //its so much easier to have the buttons just upd
 
 //changes the color of all the buttons
   function deselectAll(){
-    var buttons = document.getElementsByTagName('BUTTON');
+    var buttons = document.getElementsByClassName("elementButton")
+  
     for(var i=0;i<buttons.length;i++){
       buttons[i].style.borderColor="#272727";
       //setProperty(buttons[i].id,"border-color","#272727");
@@ -33,9 +38,45 @@ function buton(id,name,color){ //its so much easier to have the buttons just upd
 function fillBoard(element){
   for(var a=0;a<columns;a++){
     for(var b=0;b<rows;b++){
-      board[a][b]=element;
+      if(board[a][b]!="na"){
+        board[a][b]=element;
+      }
     }
   }
   board=border(board);
   display();
+}
+
+function pause(){
+  paused = !paused;
+  
+  if(paused){
+    setText("pause","PLAY");
+  }
+  else {
+    setText("pause","PAUSE");
+  }
+  
+}
+
+function modeSelect(m){
+
+  //change they both border colors to deselected
+  document.getElementById('brushButton').style.borderColor='black';
+  document.getElementById('fillButton').style.borderColor='black';
+
+  //its the little things :)
+  wasClicking = false;
+
+  //if the user selects the same mode twice
+  if(mode == m){
+    mode = "none";
+    return;
+  }
+
+  mode = m;
+
+  if(mode != "void"){
+    document.getElementById(m+'Button').style.borderColor='#BAE3F2';
+  }
 }

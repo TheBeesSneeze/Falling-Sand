@@ -43,3 +43,24 @@ function withinBounds(a,b){
     return(board[a][b] != 'border');
   }
 }
+
+// y-y1 = m(x-x1). give the function y,y1,m,x,x1 and leave one of them undefined, the function returns the undefined value
+function pointSlope(y,y1,m,x,x1){
+  if(y==undefined){
+    return( (m*(x-x1))+y1 );
+  }
+  else if( y1==undefined){
+    return( (-1 * m * (x-x1))+y );
+  }
+  else if (x == undefined){
+    return( ( (y-y1)/m ) + x1 );
+  }
+  else if (x1 == undefined){
+    return( (-1* ( (y-y1)/m) )+x );
+  }
+}
+
+//returns m for m=(y1-y2)/(x1-x2)
+function slope(x1,x2,y1,y2){
+  return((y1-y2)/(x1-x2));
+}

@@ -2,9 +2,9 @@
 //===!different particle functions should just take [nothing at all]==
 
 const sandPassThrough =  ['air','water','fire','smoke','paint','fly','deadfly'];
-//(1) if space below sand is air/water/smoke, they will swap. if it cant fall, itll try to fall to its sides
+//if cell below sand is in sandPassThrough, they will swap. if it cant fall, it'll try to fall to its sides (down left/right)
 function sand(){
-    //if randy is 1, the sand wont fall, to create a more random lookin effect.
+    //if random number is 1, the sand wont fall, to create a more random lookin effect.
     if(randomNumber(100)!=1){
       if (passThrough(board[x][y+1],sandPassThrough)){
         if(passThrough(board[x][y+2],sandPassThrough)){
@@ -25,16 +25,11 @@ function sand(){
           swap(x,y,x+1,y+1);
           return;
       }
-      //sand dissapears if lava
-      if(board[x][y+1] == 'lava'){
-        board[x][y]='air';//make it stone or smoke or something else cool?
-        draw(x,y);
-        return;
-      }
+      
     }
-    else{
-      hasAnythingHappened=true;
-    }
+    //else{
+    //  hasAnythingHappened=true;
+    //}
 }
   
 //('water')if space below water is air/smoke. if sides are empty, water disperses (random directangleions? hopefully?). if water runs into fire, extinguish it.
@@ -216,7 +211,8 @@ function smoke(){
       if(passThrough(board[x][y+1],['air','fire','smoke'])) {
         swap(x,y,x,y+1);
         return;
-      } else if(passThrough(board[x][y+1],['sand',])){
+      } 
+      else if(passThrough(board[x][y+1],['sand','sponge'])){//its melting the elements here
         board[x][y+1]='air';
         swap(x,y,x,y+1);
       }
@@ -243,12 +239,7 @@ function smoke(){
     }
   }
   function lavaCheck(a,b){
-    //checks for water, the LAVA turns to stone
-    if(board[a][b]=='water'){
-      board[x][y]='stone';
-      draw(x,y);
-      return;
-    } 
+    //turn paint to smoke
     if(board[a][b]=='paint'){
       board[a][b]='smoke';
       draw(a,b);
@@ -258,6 +249,20 @@ function smoke(){
       board[a][b]='fire';
       draw(a,b);
     }
+    //checks for water, both lava AND water turns to stone or smoke
+    if(board[a][b]=='water'){
+      if(Math.random() > 0.7){ //30% chance lava turns to stone, otherwise it smoke
+        board[x][y]='stone';
+        board[a][b]="stone";
+      }
+      else {
+        board[x][y]='smoke';
+        board[a][b]='smoke';
+      }
+      draw(x,y);
+      return;
+    } 
+    
   }
   
   //Moss checks nearby spaces for water or fire or lava(REMOVE THE PART OF FIRE THAT CHECKS FOR MOSS)
@@ -326,45 +331,30 @@ function drySponge(){
 
 //might swap with dry sponges. if nearby fire/lava, turn to dry sponge
 function wetSponge(){
-    if(!drippySpongeCheck){
-      //check for fire/lava
-      if(wetSpongeCheck(x,y+1)){//down
-        return;
-      } else if(wetSpongeCheck(x,y-1)){//up
-        return;
-      } else if(wetSpongeCheck(x+1,y)){//right
-        return;
-      } else if(wetSpongeCheck(x-1,y)){//left
-        return;
-      }
-      //ayo sponge wit da driiiiiip
-      else {
-        //sponge drips water and dries
-        if(randomNumber(wetSpongeDripChance) == 1){//chance of sponge straight drippin OR 
-          //creates lil water droppleeeet
-          if(board[x][y+1]=='air'){
-            board[x][y]='drysponge';
-            board[x][y+1]='water';
-            draw(x,y);
-            draw(x,y+1);//it needs to draw the new water because it might be in a different chunk
-            return;
-          } 
-          //swaps with dry sponge below
-          else if(board[x][y+1]=='drysponge'){
-            swap(x,y,x,y+1);
-          }
-        }
-        else {//giving you a second chance lil guy
-          hasAnythingHappened=true;
-        }
-      }                             //mmmm this spaghetti is delicious
+  //check for fire/lava
+  if(wetSpongeCheck(x,y+1) || wetSpongeCheck(x,y-1) || wetSpongeCheck(x+1,y) || wetSpongeCheck(x-1,y)){
+    return;
+  }
+  //ayo sponge wit da driiiiiip
+  //sponge drips water and dries
+  if(randomNumber(wetSpongeDripChance) == 1){//chance of sponge straight drippin OR 
+    //creates lil water droppleeeet
+    if(board[x][y+1]=='air'){
+      board[x][y]='drysponge';
+      board[x][y+1]='water';
+      draw(x,y);
+      draw(x,y+1);//it needs to draw the new water because it might be in a different chunk
+      return;
+    } 
+    //swaps with dry sponge below
+    else if(board[x][y+1]=='drysponge'){
+      swap(x,y,x,y+1);
     }
-    else{
-      drippySponge();
-    }
+  }                      //mmmm this spaghetti is delicious
 }
 function wetSpongeCheck(a,b){
-    if(board[a][b] == 'fire' || board[a][b] == 'lava'){//lava or fire
+    if(passThrough(board[a][b],["fire","burning","lava"])){//lava or fire
+      console.log('dry');
       board[x][y] = 'drysponge';
       draw(x,y);
       return true;
@@ -404,43 +394,22 @@ function paintCheck(a,b){
 }
 // [REDACTED]
 function REDACTED(){
-    if(withinBounds(x,y)){
+    if(x>0 && x<columns-1 && y>0 && y<rows-1){
       rng = randomNumber(5);
-      var spotX = randomNumber(-1,1);
-      var spotY = randomNumber(-1,1);
+      var spotX = randomNumber(-1,2);
+      var spotY = randomNumber(-1,2);
       spotX = x + spotX;
       spotY = y + spotY;
       
       if(rng == 0){
         draw(x,y);
       }
-      if(board[spotX][spotY] != 99){
-        board[spotX][spotY] = 99;
+      if(board[spotX][spotY] != 'border' && board[spotX][spotY] != "na"){
+        board[spotX][spotY] = 'border';
         draw(spotX,spotY);
         //chunkQueue[chunkX][chunk]=true;
       }
     }
-}
-
-//alternatitve functionality for wet sponges
-//wet sponges will produce the selected element on all of its sides
-function drippySponge(){
-    if(board[x][y+1]=='air'){//down
-      board[x][y+1]=currentElement;
-      draw(x,y+1);
-    }
-    if(board[x][y-1]=='air'){//up
-      board[x][y-1]=currentElement;
-      draw(x,y-1);
-    }
-    if(board[x+1][y]=='air'){//right
-      board[x+1][y]=currentElement;
-      draw(x+1,y);
-    }
-    if(board[x-1][y]=='air'){//left
-      board[x-1][y]=currentElement;
-      draw(x-1,y);
-    }    
 }
 
 var isTheFlyAlive;

@@ -3,20 +3,25 @@ var can = document.getElementById("canvas");
 can.width=canvasWidth;
 can.height=canvasHeight;
 
+//pauseButton.style.left = (108 * canvasWidth / screen.availWidth) + "%"; <dont use this (i think)
+
+let settingsGap = (canvasWidth *1.09) + "px";
+
+//i can say with certainty that i am doing this the hard way, but i dont know the easy way ¯\_(ツ)_/¯
+document.getElementById("pause").style.left = settingsGap;
+document.getElementById("brushButton").style.left = settingsGap;
+document.getElementById("fillButton").style.left = (canvasWidth *1.14) + "px";;
+
+
 setActiveCanvas("canvas");
 setStrokeWidth(3);
 setStrokeColor(rgb(0,0,0,0));
 
 setStrokeColor(rgb(0,0,0,0));//i wonder if this line is even needed 
+//its not but im keeping it anyways
 
 var board=blankList();
 //var newBoard=board;   //an ancient relic.
-
-//board[12][12]="magic";
-//board[13][13]="magic";
-//board[14][13]="magic";
-//board[12][14]="magic";
-//board[13][14]="magic";
 
 //returns a blank list full of air, it also has a border
 function blankList(){//call this at the beggining of each function, it creates a list thats only zeros
@@ -47,5 +52,6 @@ function border(iHardlyKnower){//creates the border around the whole thing
   return(borderList);
 }
 
-//keep display() at the bottom please. edit: i forgot why i needed to keep it at the bottom. edit 2: i still dont remember why, anyways, how are you doin? edit 3: hey thanks man, i was having a weird day but i'm feeling really good now, wbu edit 4. why the fuck is display at the bottom surely it couldnt matter *that* much
+//keep display() at the bottom please. edit: i forgot why i needed to keep it at the bottom. edit 2: i still dont remember why, anyways, how are you doin? edit 3: hey thanks man, i was having a weird day but i'm feeling really good now, wbu edit 4. why the heck is display at the bottom surely it couldnt matter *that* much
 //"for reasons I do not remember, display() needs to be declared last"
+
