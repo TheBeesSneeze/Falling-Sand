@@ -1,7 +1,11 @@
 var can = document.getElementById("canvas");
+var cur = document.getElementById("cursor");
 
 can.width=canvasWidth;
+cur.width=canvasWidth;
 can.height=canvasHeight;
+cur.height=canvasHeight;
+
 
 //pauseButton.style.left = (108 * canvasWidth / screen.availWidth) + "%"; <dont use this (i think)
 
@@ -12,6 +16,10 @@ document.getElementById("pause").style.left = settingsGap;
 document.getElementById("brushButton").style.left = settingsGap;
 document.getElementById("fillButton").style.left = (canvasWidth *1.14) + "px";;
 
+
+setActiveCanvas('cursor');
+setFillColor(highlightColor);
+setStrokeColor('rgb(0,0,0,0');
 
 setActiveCanvas("canvas");
 setStrokeWidth(3);

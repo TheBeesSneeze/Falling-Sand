@@ -17,7 +17,11 @@ var fillCount=0;
 var prevFillCount=0;
 
 //     V
-can.onclick = function clickEvent(e) {
+cur.onclick = function clickEvent(e) {
+    setActiveCanvas("cursor");
+    clearCanvas();
+    setActiveCanvas("canvas");
+
     if(mode=='brush'){
         clicking = !clicking;
     }
@@ -81,7 +85,7 @@ can.onclick = function clickEvent(e) {
     }
 }
 
-can.onmousemove = function clickEvent(e) {
+cur.onmousemove = function clickEvent(e) {
     var rect = e.target.getBoundingClientRect();
     mouseX = e.clientX - rect.left; //x position within the element.
     mouseY = e.clientY - rect.top;  //y position within the element.
@@ -89,12 +93,24 @@ can.onmousemove = function clickEvent(e) {
     mouseX=Math.round(mouseX/cellSize);
     mouseY=Math.round(mouseY/cellSize);
 }
+var mouseOverCanvas = false;
 
-can.onmouseenter = function clickEvent(){
+cur.onmouseenter = function clickEvent(){
+    mouseOverCanvas = true;
+    setActiveCanvas("cursor");
+    clearCanvas();
+    setActiveCanvas("canvas");
     clicking = wasClicking;
 }
 
-can.onmouseout = function clickEvent(){
+
+
+cur.onmouseout = function clickEvent(){
+    mouseOverCanvas = false;
+    setActiveCanvas("cursor");
+    clearCanvas();
+    setActiveCanvas("canvas");
+
     wasClicking = clicking;
     clicking = false;
 }
@@ -185,40 +201,55 @@ document.addEventListener('keydown',function(event){
     lastKey = key;
 });
 
+//constantly drawing / highlighting
 setInterval(function(){
-    if(clicking && mode=='brush'){
-        mouse(mouseX,mouseY);
+    if(mode=='brush'){
+        //the fill
+        if(clicking){
+            mouse(mouseX,mouseY);
+        }
+        // the highlight
+        else if(mouseOverCanvas) {
+            highlight(mouseX,mouseY)
+        }
     }
 },delay/2);
 
+//draws a cursorSize * cursorSize square of currentElement
 function mouse(mx,my){
-    var size = Math.floor(cursorSize/2);
-    for(var a=mx-size;a<=mx+size;a++){
-        for(var b=my-size; b<=my+size; b++){
+    var radius = Math.floor(cursorSize/2);
+    for(var a=mx-radius;a<=mx+radius;a++){
+        for(var b=my-radius; b<=my+radius; b++){
             if(withinBounds(a,b)){
-                if((board[a][b]=='air' || paintOver) && Math.random() > 0.1){
+                if((board[a][b]=='air' || paintOver) && (Math.random() > 0.1 || cleanBrush) && board[a][b] !="na"){
                     if(board[a][b] != currentElement){ //optimization
                         //bugs life
                         if(currentElement=="bugs"){    
-                            if(randomNumber(Math.pow(size,6))==1){ //bugs to the sixth
+                            if(randomNumber(Math.pow(radius,6))==1){ //bugs to the sixth
                                 if(Math.random() > 0.5){
                                     board[a][b]='fly';
                                 }
                             }
                         }
-                        else if(board[a][b] !="na"){
+                        else { // any element that isn't bugs
                             board[a][b]=currentElement;
                         }
                         draw(a,b);
                     }
-                    
                 }
             }
         }            
     }
 }
 
-
+function highlight(mx,my){
+    setActiveCanvas("cursor");
+    clearCanvas();
+    
+    var radius = Math.floor(cursorSize/2);
+    rectangle((mouseX-radius)*cellSize,(mouseY-radius)*cellSize,cursorSize*cellSize,cursorSize*cellSize);
+    setActiveCanvas("canvas");
+}
 
 //fill checks the areas all around it and fills accordingly. fill will only check its neighbors if it can fill the cell at a,b.
 //at the start of the functio, fill does not know if it is a valid cell or not. it does not even know if it is within bounds. fill will only try to spread if it can draw/is valid however

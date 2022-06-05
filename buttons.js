@@ -38,12 +38,11 @@ function buton(id,name,color,fill){ //its so much easier to have the buttons jus
 function fillBoard(element){
   for(var a=0;a<columns;a++){
     for(var b=0;b<rows;b++){
-      if(board[a][b]!="na"){
+      if(board[a][b]!="na" && board[a][b]!="border"){
         board[a][b]=element;
       }
     }
   }
-  board=border(board);
   display();
 }
 

@@ -128,7 +128,7 @@ function fire(){
       return;
     }
     //fire will be masked if it cant move, so it looks animated
-    else{
+    else if(Math.random() > 0.95){
       draw(x,y);
     }
 }
@@ -167,7 +167,8 @@ function burning(){
     draw(x,y+1);
     return;
   }
-  if(Math.random() >0.6){
+  //draw again
+  if(Math.random() >0.95){ // surprised i can make the chance of reanimation this low and it still looks good
       draw(x,y);
   }
 }
@@ -266,7 +267,7 @@ function smoke(){
   }
   
   //Moss checks nearby spaces for water or fire or lava(REMOVE THE PART OF FIRE THAT CHECKS FOR MOSS)
-  function moss(){
+function moss(){
     if(mossCheck(x,y+1)){//down
       return;
     } else if(mossCheck(x,y-1)){//up
@@ -394,19 +395,19 @@ function paintCheck(a,b){
 }
 // [REDACTED]
 function REDACTED(){
-    if(x>0 && x<columns-1 && y>0 && y<rows-1){
-      rng = randomNumber(5);
+    if(x>0 && x<columns-1 && y>0 && y<rows-1){ // if its not on the border
+      rng = randomNumber(15);
       var spotX = randomNumber(-1,2);
       var spotY = randomNumber(-1,2);
       spotX = x + spotX;
       spotY = y + spotY;
       
       if(rng == 0){
-        draw(x,y);
+        draw(x,y); //become darkness
       }
       if(board[spotX][spotY] != 'border' && board[spotX][spotY] != "na"){
         board[spotX][spotY] = 'border';
-        draw(spotX,spotY);
+        mask(spotX,spotY,colors[randomNumber(0,colors.length)]);
         //chunkQueue[chunkX][chunk]=true;
       }
     }
