@@ -46,17 +46,23 @@ function water(element){
       }
       //moves down if air or smoke
       if(passThrough(down,['air','smoke','fly','deadfly'])){
-        if(passThrough(board[x-1][y+1],['air','smoke']) && randomNumber(10)==1){
-          swap(x,y,x-1,y+1);
-        }
-        if(y+2<rows){//moves down 2 spaces if it can
-          if(passThrough(board[x][y+2],['air','smoke','fly','deadfly']) || (element=="paint" && board[x][y+2] == 'water')){
-           swap(x,y,x,y+2);
-           return;
+        if(down != "smoke" || Math.random() > 0.7){//so that smoke downt look horrible
+          if(passThrough(board[x-1][y+1],['air','smoke']) && randomNumber(10)==1){ //for some reason the thing looks like ass if i dont have this
+            swap(x,y,x-1,y+1);
+            return;
           }
+  
+          if(y+2<rows){//moves down 2 spaces if it can
+            if(passThrough(board[x][y+2],['air','smoke','fly','deadfly']) || (element=="paint" && board[x][y+2] == 'water')){
+             swap(x,y,x,y+2);
+             return;
+            }
+          }
+          swap(x,y,x,y+1);
+          return;
         }
-        swap(x,y,x,y+1);
-        return;
+
+        
       }
       
       //moves right, then  moves left (pretty random tho)
@@ -89,6 +95,7 @@ function water(element){
       }
     //this runs if nothing happens because of rng
     } else {
+      updateChunk(x,y);
       hasAnythingHappened=true;
     }
 }
@@ -110,12 +117,9 @@ function fire(){
       if(randySpread > 3){ //swap with air
         swap(x, y, x+fireX, y+fireY);
         return;
-      } 
-      else if(randySpread == 'air'){ //sets air ablaze
-        board[x+fireX][y+fireY]='fire';
-        draw(x+fireX,y+fireY);
-        return;
-      } else {//turns into smoke if randySpread is 1 or 2 or 3
+      }
+      //dude no way a .1% chance of fire turning to smoke is ideal
+      else if(Math.random() > 0.999) {//turns into smoke 
         board[x][y] = 'smoke';
         draw(x,y);
         return;
@@ -130,6 +134,9 @@ function fire(){
     //fire will be masked if it cant move, so it looks animated
     else if(Math.random() > 0.95){
       draw(x,y);
+    }
+    else{
+      //hasAnythingHappened=true;
     }
 }
 //part of fire, it checks nearby spaces for water or wood. and marks any empty/smoke areas nearby. j and i are x and y values. chance is the uh chance that fire will move in that directangleion (to prevent sliding in one directangleion)
@@ -204,41 +211,60 @@ function smoke(){
     lavaCheck(x-1,y);
     
     //checks the spot below
-    var randy = randomNumber(3);//this is the chance of lava moving, feel free to change.
-                            //chance lava will move to its sides if it cant go down, feel free to change
-    var randySides = randomNumber(3);
+
     //lava falls through air, smoke, fire
-    if(randy > 0){
-      if(passThrough(board[x][y+1],['air','fire','smoke'])) {
+    if(passThrough(board[x][y+1],['air','fire','smoke'])) {
+      if(Math.random()<0.35){
         swap(x,y,x,y+1);
         return;
-      } 
-      else if(passThrough(board[x][y+1],['sand','sponge'])){//its melting the elements here
+      }
+      hasAnythingHappened=true;
+    }
+    else if(passThrough(board[x][y+1],['sand','sponge'])){//its melting the elements below here
+      if(Math.random() > 0.25){
         board[x][y+1]='air';
         swap(x,y,x,y+1);
+        return;
       }
-      //slide to the left *boom* 
-      else if(randySides == 0){
-        if(passThrough(board[x-1][y],['air','fire','smoke'])){//left
-          swap(x,y,x-1,y);
-          return;
-        }
-        if(passThrough(board[x-1][y],['sand'])){
-          board[x-1][y]='smoke';
-          draw(x,y);
-        }
+      hasAnythingHappened=true;
+    }
+
+    //melting the left
+    if(passThrough(board[x-1][y],['sand',"sponge"])){
+      if(Math.random() >0.45){
+        board[x-1][y]='smoke';
+        draw(x-1,y);
       }
-      //slide to the right 
-      else if(passThrough(board[x+1][y],['air','fire','smoke'])){
+      hasAnythingHappened=true;      
+    }
+    //melt the right
+    if(passThrough(board[x+1][y],['sand',"sponge"])){
+      if(Math.random() > 0.25){
+        board[x+1][y]='smoke';
+        draw(x+1,y);
+      }
+      hasAnythingHappened=true;
+    }
+
+    //slide to the left *boom* 
+    if(passThrough(board[x-1][y],['air','fire','smoke'])){//left
+      if(Math.random() > 0.95){
+        swap(x,y,x-1,y);
+        return;
+      }
+      hasAnythingHappened=true;
+    }
+    //slide to the right
+    if(passThrough(board[x+1][y],['air','fire','smoke'])){
+      if(Math.random()>0.95){
         swap(x,y, x+1,y);
         return;
       }
-      else if(passThrough(board[x+1][y],['sand'])){
-        board[x-1][y]='smoke';
-        draw(x,y);
-      }
+      hasAnythingHappened=true;
     }
+    
   }
+    
   function lavaCheck(a,b){
     //turn paint to smoke
     if(board[a][b]=='paint'){
@@ -251,14 +277,27 @@ function smoke(){
       draw(a,b);
     }
     //checks for water, both lava AND water turns to stone or smoke
-    if(board[a][b]=='water'){
-      if(Math.random() > 0.7){ //30% chance lava turns to stone, otherwise it smoke
+    if(passThrough(board[a][b],['water',"wetsponge"])){
+      if(Math.random() > 0.95){ //5% chance lava turns to stone, otherwise it smoke
         board[x][y]='stone';
-        board[a][b]="stone";
+        //turn little area to stone
+        for(var i=a-1;i<=a+1;i++){
+          for(var j=b-1;j<=b+1;j++){
+            if(withinBounds(i,j)){
+              if(passThrough(board[i][j],["water","lava","air","paint","snow","ice","smoke","fire","wetsponge"])){
+                if(Math.random() > 0.3){
+                  board[i][j] = "stone";
+                  draw(i,j);
+                }
+              }
+            }
+          }
+        }
       }
       else {
         board[x][y]='smoke';
         board[a][b]='smoke';
+        draw(a,b);
       }
       draw(x,y);
       return;
@@ -286,6 +325,7 @@ function mossCheck(a,b){
         draw(x,y);
         return true;
       }
+      hasAnythingHappened=true;
     } 
     else if (board[a][b] == 'water'){
       rng = randomNumber(5); //chance of water turning to moss
@@ -293,6 +333,7 @@ function mossCheck(a,b){
         board[a][b] = 'moss';
         draw(a,b);
       }
+      hasAnythingHappened=true;
     }
     return false; //god dang i am so good at at programming
   }
@@ -300,17 +341,16 @@ function mossCheck(a,b){
 //maybe move sponge to be a part of water, actually
 // if adjacent spaces are water, remove water and turn dry sponge into wet sponge
 function drySponge(){
-    var spongeCheck = false;
 
     if(Math.random() >= 0.5){
       for(var a=x-spongeRadius;a<=x+spongeRadius; a++){
-      for(var b=y-spongeRadius; b<=y+spongeRadius; b++){
+      for(var b=y-spongeRadius; b<=y; b++){
         if(withinBounds(a,b)){
           if(board[a][b]=='water'){
             board[a][b]='air';
             draw(a,b);
 
-            if(!thirstySponges){
+            if(!thirstySponges && Math.random() > 0.8){
               board[x][y]='wetsponge';
               draw(x,y);
             }
@@ -338,24 +378,41 @@ function wetSponge(){
   }
   //ayo sponge wit da driiiiiip
   //sponge drips water and dries
-  if(randomNumber(wetSpongeDripChance) == 1){//chance of sponge straight drippin OR 
-    //creates lil water droppleeeet
-    if(board[x][y+1]=='air'){
+  if(passThrough(board[x][y+1],["air","smoke","fire","burning"])){
+    if(Math.random() < 0.025){
       board[x][y]='drysponge';
       board[x][y+1]='water';
       draw(x,y);
-      draw(x,y+1);//it needs to draw the new water because it might be in a different chunk
+      draw(x,y+1);
       return;
-    } 
-    //swaps with dry sponge below
-    else if(board[x][y+1]=='drysponge'){
-      swap(x,y,x,y+1);
     }
-  }                      //mmmm this spaghetti is delicious
+    hasAnythingHappened=true;
+  }
+  if(board[x][y+1]=='drysponge'){
+    if(Math.random()<0.015){
+      swap(x,y,x,y+1);
+      return;
+    }
+    hasAnythingHappened=true;
+  }
+  //fuck it, sponge got sand physics now
+  else if(board[x+1][y+1]=="drysponge" && passThrough(board[x+1][y],["air","drysponge","wetsponge"])){
+    if(Math.random()<0.025){
+      swap(x,y,x+1,y+1);
+      return;
+    }
+    hasAnythingHappened=true;
+  }
+  else if(board[x-1][y+1]=="drysponge" && passThrough(board[x-1][y],["air","drysponge","wetsponge"])){
+    if(Math.random()<0.025){
+      swap(x,y,x-1,y+1);
+      return;
+    }
+    hasAnythingHappened=true;
+  }
 }
 function wetSpongeCheck(a,b){
     if(passThrough(board[a][b],["fire","burning","lava"])){//lava or fire
-      console.log('dry');
       board[x][y] = 'drysponge';
       draw(x,y);
       return true;
@@ -396,6 +453,7 @@ function paintCheck(a,b){
 // [REDACTED]
 function REDACTED(){
     if(x>0 && x<columns-1 && y>0 && y<rows-1){ // if its not on the border
+      hasAnythingHappened=true;
       rng = randomNumber(15);
       var spotX = randomNumber(-1,2);
       var spotY = randomNumber(-1,2);
@@ -410,9 +468,19 @@ function REDACTED(){
         mask(spotX,spotY,colors[randomNumber(0,colors.length)]);
         //chunkQueue[chunkX][chunk]=true;
       }
+
+      if(Math.random() <= 0.0001){
+        update(randomNumber(1,columns),randomNumber(1,rows),"border");
+      }
     }
 }
 
+//the forbidden bug element
+function bugs(){
+  update(x,y,"fly");
+}
+
+//funniest variable
 var isTheFlyAlive;
 //bugs bugs bugs bugs bugs bugs b-b-b-bugs
 function fly(){
@@ -442,7 +510,7 @@ function flyCheck(a,b){
   if(isTheFlyAlive){
     //BURN BURN BURN BURN
     if(passThrough(board[a][b],['fire','burning','lava'])){
-      board[x][y]='smoke';
+      board[x][y]='fire';
       isTheFlyAlive = false;
       return;
     }
@@ -471,15 +539,48 @@ function deadFly(){
     return;
   }
   //move up. it should have the effect like its floating on water
-  if(passThrough(board[x][y-1], ['water','paint']) && Math.random() < 0.2){
+  if(passThrough(board[x][y-1], ['water','paint']) && Math.random() < 0.2){S
     swap(x,y,x,y-1);
     return;
   }
 }
 
+//I DIDNT STEAL THIS FROM MINECRAFT! I SWEAR! ITS MY OWN ORIGINAL CHARACTER! PLEASE! YOU GOTTA BELIEVE ME
+function chorus(){
+  //no idea how this is gonna work with magic, kinda scared
+
+  chorusCheck(x,y-1);
+
+  //very small chance of it moving
+  //keep this functionality if you make chorus fluid, itll be so cool
+  if(Math.random()<=0.015){
+
+    //im trying something new ok
+    var d=[ {x:0,y:-1},{x:0,y:1},{x:-1,y:0},{x:1,y:0} ][randomNumber(0,4)]
+
+    if(withinBounds(x+d.x,y+d.y)){
+      swap(x,y,x+d.x,y+d.y);
+    }
+  }
+}
+
+//if theres an element at ab that isnt air/border, it will be teleported to a random air space
+function chorusCheck(a,b){
+  if(withinBounds(a,b)){
+    if(!passThrough(board[a][b],['air','border',"chorus"])){
+      var d = randomElementSearch("air",10);
+
+      if(d != undefined){
+        swap(a,b,d.x,d.y);
+      }
+      
+    }
+  }
+}
+
 //literally conways game of life lol. btw air counts as a dead cell. literally any other cell is considered alive.
 function magic(){
-  var neighbors = getNeighbors(x,y);// [alive, dead]
+  var neighbors = getMagicNeighbors(x,y);// [alive, dead]
 
   //first, check surrounding air elements to see if they should be alive (cells might be checked twice, thats okay)
   if(neighbors[1] > 0){//effishenchy (skip on checking air elements if there is no air )
@@ -500,7 +601,7 @@ function magic(){
   }
 }
 //returns a list containing qty of alive neighbors[ index 0 ] and the qty of dead neighbors [index 1], with a and b being the center
-function getNeighbors(a,b){
+function getMagicNeighbors(a,b){
   var dead=0;
   var alive=0;
   for(var i=a-1;i<=a+1;i++){
@@ -518,8 +619,9 @@ function getNeighbors(a,b){
   return([alive,dead]);
 }
 //a dead cell with exactly 3 neighbors will come to life
+//thats a shitty description what does the function do dipshit
 function deadCells(a,b){
-  var neighbors=getNeighbors(a,b);
+  var neighbors=getMagicNeighbors(a,b);
   
   if(neighbors[0]==3){
     if(!dangerousMagic){

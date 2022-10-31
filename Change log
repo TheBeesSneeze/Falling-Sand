@@ -1,0 +1,28 @@
+Change Log
+
+FALLING SAND V 2.1 (DATE GOES HERE)
+*Added Eyedropper Tool
+*Added an undo feature (Press the Z key!)
+*Improved Keyboard controls (Try using the arrow keys!)
+*Tweaked the behavior of wet sponges
+*Removed the ability to fill the board by selecting an element twice
+*Changed the order of the buttons
+*Tweaked the consistency of the brush with each element
+*Brought back chunk rendering for slightly faster math
+
+FALLING SAND V 2.0 RELEASE (6/5/2022)
+*Ported the whole game to HTML
+*Added Flies (Bugs)
+*Added Magic
+*Added Fill Tool
+*Added ability to change brush size ('[' and ']' keys)
+*Added element keyboard shortcuts (type the first 2 letters of any element or use number keys)
+*Added new "burning" element so that things burn longer when they catch on fire, its kind of like a stationary lava
+*Gave many elements new colors
+*Tweaked the behavior of most elements
+*Added a secret element
+*Changed The Secret Ending
+*Many,many bug fixes
+*Removed Chunk Rendering
+*Removed the ability to turn on secret modes (I'm working on bringing them back!)
+*Removed half the optimizations from the code.org version

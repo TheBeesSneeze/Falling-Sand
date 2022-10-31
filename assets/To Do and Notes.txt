@@ -1,0 +1,56 @@
+=== ELEMENT IDEAS ===
+
+redstone!
+snow
+ice
+gunpowder
+-charred stone
+worms lol
+chorus (which teleports nearby elements)
+skulk? which spreads when something dies
+
+
+
+=== FEATURES ===
+
+consistent drawing lines
+
+a "shuffle all elements on the board lol" button
+
+// DONE //               an undo button
+
+remove the fill feature
+
+make the plant element more plant-y
+
+make wet sponge turn to water when lava'd
+
+
+=== KNOWN ISSUES ===
+
+// DONE // pressing a button while using the eyedropper tool is fucked up
+
+Lava doesnt destroy sponges from the sides
+
+
+
+=== NOTES ===
+if you wanted to make a smart element you can make an object which can store info about each element at its x and y indexes
+
+you could potentially remake the whole program and have it be smartDisplay() and copy() oriented.
+idk how worth it this would be, it'd certainly be nice to be rid of all of the random functions, but idk if itd be optimized
+
+ok what if you hid some random image in falling sand
+
+how would one go about playing bad apple on falling sand
+
+maybe make a chance of water just eating smoke and not letting it bubble up
+
+in the colors object(name change?) make it so you can have properties abt each element type, so you can know things like
+ if each element should have a solid fill or a rough one
+
+make a list that has all the button ids so you can choose the order of em all
+
+minecraft update?
+
+ok i need to make plant drop water when it burns

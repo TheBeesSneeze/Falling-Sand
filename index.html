@@ -10,26 +10,20 @@
         <canvas id="canvas" width="400px" height="400px" style="border-color: black;"></canvas>
         <canvas id="cursor" width="400px" height="400px" style="border-color: black;"></canvas>
 
-        <button type="button" class="settings" id="pause" aria-label="pause" onclick="pause()">PAUSE</button>
-        <button type="button" class="settings" id="brushButton" aria-label="brush" style="top:5.5%; width:40px; height:40px;border-color: #BAE3F2;" onclick="modeSelect('brush');"> 
-            <img src="assets\paint brush.png" alt="paint bucket" style="width:30px; height:30px; position:absolute; left:2.5px; top:2.5px" ></img></button>
-        <button type="button" class="settings" id="fillButton" aria-label="fill bucket" style="top:5.5%; width:40px; height:40px;" onclick="modeSelect('fill');"> 
-            <img src="assets\paint bucket.png" alt="paint bucket" style="width:30px; height:30px; position:absolute; left:2.5px; top:2.5px" ></img></button>
+
+            <button type="button" class="settings" id="pause" aria-label="pause" onclick="pause()">PAUSE</button>
+            <button type="button" class="settings" id="brushButton" aria-label="brush" style="top:5.5%; width:40px; height:40px;border-color: #BAE3F2;" onclick="modeSelect('brush',true);"> 
+                <img src="assets\paint brush.png" alt="paint bucket" style="width:30px; height:30px; position:absolute; left:2.5px; top:2.5px" ></img></button>
+
+            <button type="button" class="settings" id="fillButton" aria-label="fill bucket" style="top:5.5%; width:40px; height:40px;" onclick="modeSelect('fill',true);"> 
+                <img src="assets\paint bucket.png" alt="paint bucket" style="width:30px; height:30px; position:absolute; left:2.5px; top:2.5px" ></img></button>
+
+            <button type="button" class="settings" id="eyeDropperButton" aria-label="eye dropper" style="top:13%; width:40px; height:40px;" onclick="modeSelect('eyeDropper',true);"> 
+                <img src="assets\eye dropper.png" alt="eye dropper" style="width:28px; height:28px; position:absolute; left:2.5px; top:2.5px" ></img></button>
         
         <script type="text/javascript" src="element config.js"></script>
         <script type="text/javascript" src="Variables.js"></script>
         <script type="text/javascript" src="app lab translation.js"></script>
-        <script type="text/javascript" src="initialize.js"></script>
-
-        <script type="text/javascript" src="tools.js"></script>
-        <script type="text/javascript" src="user interface.js"></script>
-        <script type="text/javascript" src="buttons.js"></script>
-        <script type="text/javascript" src="display.js"></script>
-        
-        <script type="text/javascript" src="elements.js"></script>
-        <script type="text/javascript" src="iteration.js"></script>
-
-        <button type="button" class="elementButton" id="label" style="width:auto;" onclick="fillBoard(currentElement)">AIR</button>
 
         <button type="button" class="elementButton" id="air" aria-label="air" style="background-color:white;top:6%;border-color: #BAE3F2;" onclick="buton('air','AIR','rgb(187, 187, 187)');"></button>
         <button type="button" class="elementButton" id="sand" aria-label="sand" style="background-color:#FFE0AB;top:11%;" onclick="buton('sand','SAND','#f3ce93');"></button>
@@ -44,7 +38,22 @@
         <button type="button" class="elementButton" id="wetsponge" aria-label="Name" style="background-color:#b3aa2e;top:56%;" onclick='buton("wetsponge","WET SPONGE","#b3aa2e");'></button>
         <button type="button" class="elementButton" id="paint" aria-label="Name" style="background-color:red;top:61%;" onclick='buton("paint","PAINT",paintColor);'></button>
         <button type="button" class="elementButton" id="bugs" aria-label="Name" style="background-color:#414141;top:66%;" onclick='buton("bugs","BUGS","#414141");'></button>
+        <button type="button" class="elementButton" id="chorus" aria-label="chorus" style="background-color:#5e2980;top:71%;" onclick='buton("chorus","CHORUS","#5e2980");'></button>
         <button type="button" class="elementButton" id="magic" aria-label="magic" style="background-color:magenta;top:71%;" onclick='buton("magic","MAGIC","magenta");'></button>
+                
+        <script type="text/javascript" src="tools.js"></script>
+        <script type="text/javascript" src="initialize.js"></script>
+        
+        <script type="text/javascript" src="buttons.js"></script>        
+        <script type="text/javascript" src="user interface.js"></script>
+        <script type="text/javascript" src="display.js"></script>
+        
+        <script type="text/javascript" src="elements.js"></script>
+        <script type="text/javascript" src="iteration.js"></script>
+
+        <button type="button" class="elementButton" id="label" style="width:auto;" onclick="fillBoard(currentElement)">AIR</button>
+
+        
 
     </body>
 </html>

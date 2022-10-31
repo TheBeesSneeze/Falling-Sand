@@ -5,6 +5,7 @@ var mouseY = 0;
 var prevMouseX = 0;
 var prevMouseY = 0;
 var offset = 1;
+var mouseOverCanvas = false;
 
 //fillWith will replace fillElement
 var fillWith = 'air';
@@ -23,10 +24,15 @@ cur.onclick = function clickEvent(e) {
     setActiveCanvas("canvas");
 
     if(mode=='brush'){
+        if(!clicking){
+            backupBoard=copy(board);
+        }
         clicking = !clicking;
     }
     if(mode == 'fill')
     {
+        backupBoard=copy(board);
+
         //set up fill elements
         fillWith = currentElement;
         fillElement = board[mouseX][mouseY];
@@ -76,6 +82,24 @@ cur.onclick = function clickEvent(e) {
 
         }
     }
+    if(mode == "eyeDropper"){
+        if(mouseOverCanvas){
+            var hovering = board[mouseX][mouseY];
+            updateLabel(hovering);
+            deselectAll();
+            modeSelect("brush");
+            currentElement=hovering;
+            currentlyDrawing=false;
+    
+            if(document.getElementById(hovering) != null){
+                document.getElementById(hovering).style.borderColor="#BAE3F2";
+            }
+            else {
+                document.getElementById("label").style.borderColor="#BAE3F2";
+            }
+        }
+        
+    }
     if(mode=="none"){
         board[mouseX][mouseY]="na";
     }
@@ -86,14 +110,22 @@ cur.onclick = function clickEvent(e) {
 }
 
 cur.onmousemove = function clickEvent(e) {
+    prevMouseX = mouseX;
+    prevMouseY = mouseY;
+
     var rect = e.target.getBoundingClientRect();
     mouseX = e.clientX - rect.left; //x position within the element.
     mouseY = e.clientY - rect.top;  //y position within the element.
 
     mouseX=Math.round(mouseX/cellSize);
     mouseY=Math.round(mouseY/cellSize);
+    if(mode=="eyeDropper" && mouseOverCanvas){
+        if(mouseX>=0&&mouseX<columns&&mouseY>=0&&mouseY<=rows){
+            updateLabel(board[mouseX][mouseY]); //yeah this line of code causes a lot of errors but im not fixing it bc it fits in with the lore
+        }
+        
+    }
 }
-var mouseOverCanvas = false;
 
 cur.onmouseenter = function clickEvent(){
     mouseOverCanvas = true;
@@ -103,8 +135,6 @@ cur.onmouseenter = function clickEvent(){
     clicking = wasClicking;
 }
 
-
-
 cur.onmouseout = function clickEvent(){
     mouseOverCanvas = false;
     setActiveCanvas("cursor");
@@ -113,13 +143,20 @@ cur.onmouseout = function clickEvent(){
 
     wasClicking = clicking;
     clicking = false;
+
+    if(mode=="eyeDropper"){
+        setProperty('label','background-color',"white");
+        setText('label',"  .  .  .  ");
+        setProperty('label',"border-color","black");
+    }
 }
 
 var lastKey=""; //because like, both water and wood start with w you know
 //keboard control
 document.addEventListener('keydown',function(event){
     var key = event.key;
-    console.log(key);
+
+    //console.log(key);
     if(key == " " || key == "escape"){// space bar wait i fogot
         pause();
     }
@@ -138,67 +175,142 @@ document.addEventListener('keydown',function(event){
     else if(key == "Tab"){
         console.log(mode);
         if(mode == "fill"){
-            modeSelect("brush");
+            modeSelect("eyeDropper");
         }
         else if(mode =="brush"){
             modeSelect("fill");
+        }
+        else if(mode == "eyeDropper"){
+            modeSelect("brush");
         }
         else if(mode == "none"){
             modeSelect("void");
         }
     }
+    //undo key
+    else if(key=="z" || key=="u"){
+        //pulled a swap on ya
+        var temp = copy(board);
+        board = copy(backupBoard);
+        backupBoard = temp;
+        smartDisplay(backupBoard);
+    }
+    else if(key == "`"){//debug button pretty much
+        console.log("currentElement:" + currentElement);
+    }
     //so i was just workin on the keys, you know, nothin special, and i thought, "hm, what if you could positvely destroy the world with the arrow keys"
-    //ok from here on out its all elements
-    else if(key == 0 || (key =="a" && lastKey!="m")){
-        buton('air','AIR','rgb(187, 187, 187)',false);
+    else if(key=="ArrowDown"){
+        var oldBoard = copy(board);
+        var wasPaused = paused;
+        paused = true;
+
+        for(var y=rows+pushRows; y>=-pushRows; y--){
+            for(var i=0; i<=pushRows;i++){
+                swapRows(y+i,y+i-1);
+            }
+        }
+        
+        smartDisplay(oldBoard);
+        paused = wasPaused;
     }
-    else if(key == 1 || (key =="s" && lastKey != "s" && lastKey!="w" && lastKey!="d")){
-        buton('sand','SAND','#f3ce93',false);
+    else if(key=="ArrowUp"){
+        var oldBoard = copy(board);
+        var wasPaused = paused;
+        paused = true;
+
+        for(var y=-pushRows; y<=rows+pushRows; y++){
+            for(var i=0; i<=pushRows;i++){
+                swapRows(y-i,y-i+1);
+            }
+        }
+
+        paused = wasPaused;
+        smartDisplay(oldBoard);
     }
-    else if(key == 2 || (key =="w" && lastKey!="w")){
-        buton("water","WATER","#309BE4",false);
+    else if(key=="ArrowRight"){
+        var oldBoard = copy(board);
+        var wasPaused = paused;
+        paused = true;
+
+        for(var x=columns+pushRows; x>=-pushRows; x--){
+            for(var i=0; i<=pushRows;i++){
+                swapCols(x+i,x+i-1);
+            }
+        }
+        
+        smartDisplay(oldBoard);
+        paused = wasPaused;
     }
-    else if(key == 3 || (key == "w" && lastKey =="w") || (key =="o" && lastKey == "w")){
-        buton("wood","WOOD","#6b3a18",false);
+    else if(key=="ArrowLeft"){
+        var oldBoard = copy(board);
+        var wasPaused = paused;
+        paused = true;
+
+        for(var x=-pushRows; x<=columns+pushRows; x++){
+            for(var i=0; i<=pushRows;i++){
+                swapCols(x-i,x-i+1);
+            }
+        }
+        
+        smartDisplay(oldBoard);
+        paused = wasPaused;
     }
-    else if(key == 4 || (key =="f" && lastKey!="f")){
-        buton("fire","FIRE","#FFAE39",false);
+    //ok from here on out its all element shortcuts
+    //btw this else is just here so i can collapse all the element shortcuts
+    else {
+        if(key == 0 || (key =="a" && lastKey!="m")){
+            buton('air','AIR','rgb(187, 187, 187)',false);
+        }
+        else if(key == 1 || (key =="s" && lastKey != "s" && lastKey!="w" && lastKey!="d")){
+            buton('sand','SAND','#f3ce93',false);
+        }
+        else if(key == 2 || (key =="w" && lastKey!="w")){
+            buton("water","WATER","#309BE4",false);
+        }
+        else if(key == 3 || (key == "w" && lastKey =="w") || (key =="o" && lastKey == "w")){
+            buton("wood","WOOD","#6b3a18",false);
+        }
+        else if(key == 4 || (key =="f" && lastKey!="f")){
+            buton("fire","FIRE","#FFAE39",false);
+        }
+        else if(key == 5  || (key =="m" && lastKey == "s") ){
+            buton("smoke","SMOKE","#B9B9B9",false);
+        }
+        else if(key == 6 || (key =="l" && lastKey != "f")){
+            buton("lava","LAVA","#B62203",false);
+        }
+        else if(key == 7 || (key =="t" && lastKey == "s")){
+            buton("stone","STONE","gray",false);
+        }
+        else if(key == 8 || key =="m"){
+            buton("moss","MOSS","green",false);
+        }
+        else if(key == 9 || key =="d"){
+            buton("drysponge","DRY SPONGE","#ecf22e",false);
+        }
+        else if((key =="0" && lastKey != "1") || (lastKey == "w" && (key =="s" || key=="e"))){
+            buton("wetsponge","WET SPONGE","#b3aa2e");
+        }
+        else if((key =="1" && lastKey != "1") || key =="p"){
+            buton("paint","PAINT",paintColor);
+        }
+        else if((key =="2" && lastKey != "1") || (key =="b" && lastKey!="b")){
+            buton("bugs","BUGS","#414141");
+        }
+        else if((key =="3" && lastKey != "1") || (key =="a" && lastKey=="m")){
+            buton("magic","MAGIC","magenta");
+        }
+        //secret elements!! shhh dont tell anyone!!!
+        else if((key =="l" && lastKey=="f")){
+            buton("fly","FLIES","light gray",false);
+        }
+        else if((key == "u" && lastKey=="b")){
+            buton("burning","BURNING","orange",false);
+        }
     }
-    else if(key == 5  || (key =="m" && lastKey == "s") ){
-        buton("smoke","SMOKE","#B9B9B9",false);
-    }
-    else if(key == 6 || (key =="l" && lastKey != "f")){
-        buton("lava","LAVA","#B62203",false);
-    }
-    else if(key == 7 || (key =="t" && lastKey == "s")){
-        buton("stone","STONE","gray",false);
-    }
-    else if(key == 8 || key =="m"){
-        buton("moss","MOSS","green",false);
-    }
-    else if(key == 9 || key =="d"){
-        buton("drysponge","DRY SPONGE","#ecf22e",false);
-    }
-    else if((key =="0" && lastKey != "1") || (lastKey == "w" && (key =="s" || key=="e"))){
-        buton("wetsponge","WET SPONGE","#b3aa2e");
-    }
-    else if((key =="1" && lastKey != "1") || key =="p"){
-        buton("paint","PAINT",paintColor);
-    }
-    else if((key =="2" && lastKey != "1") || (key =="b" && lastKey!="b")){
-        buton("bugs","BUGS","#414141");
-    }
-    else if((key =="3" && lastKey != "1") || (key =="a" && lastKey=="m")){
-        buton("magic","MAGIC","magenta");
-    }
-    //secret elements!! shhh dont tell anyone!!!
-    else if((key =="l" && lastKey=="f")){
-        buton("fly","FLIES","light gray",false);
-    }
-    else if((key == "u" && lastKey=="b")){
-        buton("burning","BURNING","orange",false);
-    }
+    
     lastKey = key;
+    //timeLastKeyed=Date.getTime();
 });
 
 //constantly drawing / highlighting
@@ -213,7 +325,7 @@ setInterval(function(){
             highlight(mouseX,mouseY)
         }
     }
-},delay/2);
+},delay);
 
 //draws a cursorSize * cursorSize square of currentElement
 function mouse(mx,my){
@@ -221,22 +333,30 @@ function mouse(mx,my){
     for(var a=mx-radius;a<=mx+radius;a++){
         for(var b=my-radius; b<=my+radius; b++){
             if(withinBounds(a,b)){
-                if((board[a][b]=='air' || paintOver) && (Math.random() > 0.1 || cleanBrush) && board[a][b] !="na"){
-                    if(board[a][b] != currentElement){ //optimization
-                        //bugs life
-                        if(currentElement=="bugs"){    
-                            if(randomNumber(Math.pow(radius,6))==1){ //bugs to the sixth
-                                if(Math.random() > 0.5){
-                                    board[a][b]='fly';
-                                }
+                hasAnythingHappened=true;
+                if((board[a][b]=='air' || paintOver) && board[a][b] !="na"){
+                    //bugs life
+                    if(currentElement=="bugs" && false){    
+                        if(randomNumber(Math.pow(radius,6))==1){ //bugs to the sixth
+                            if(Math.random() > 0.5){
+                                update(a,b,"fly");
                             }
                         }
-                        else { // any element that isn't bugs
-                            board[a][b]=currentElement;
-                        }
+                    }
+                    //if it aint bugs, dont fix it
+                    else if(Math.random() <= elementList[currentElement].brushChance || cleanBrush){
+                        board[a][b]=currentElement;
                         draw(a,b);
                     }
                 }
+                if(false){
+                    //update chunks in 4 corners
+                    updateChunk(mx+radius,my+radius);
+                    updateChunk(mx-radius,my+radius);
+                    updateChunk(mx+radius,my-radius);
+                    updateChunk(mx-radius,my-radius);
+                }
+                
             }
         }            
     }

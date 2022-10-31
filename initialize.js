@@ -1,3 +1,5 @@
+//itialize is mostly* ui stuff
+
 var can = document.getElementById("canvas");
 var cur = document.getElementById("cursor");
 
@@ -14,7 +16,8 @@ let settingsGap = (canvasWidth *1.09) + "px";
 //i can say with certainty that i am doing this the hard way, but i dont know the easy way ¯\_(ツ)_/¯
 document.getElementById("pause").style.left = settingsGap;
 document.getElementById("brushButton").style.left = settingsGap;
-document.getElementById("fillButton").style.left = (canvasWidth *1.14) + "px";;
+document.getElementById("fillButton").style.left = (canvasWidth *1.14) + "px";
+document.getElementById("eyeDropperButton").style.left = settingsGap;
 
 
 setActiveCanvas('cursor');
@@ -28,7 +31,10 @@ setStrokeColor(rgb(0,0,0,0));
 setStrokeColor(rgb(0,0,0,0));//i wonder if this line is even needed 
 //its not but im keeping it anyways
 
-var board=blankList();
+var board=border(blankList());
+var backupBoard=copy(board);//the board used when undoing
+var chunks=makeChunkQueue();
+
 //var newBoard=board;   //an ancient relic.
 
 //returns a blank list full of air, it also has a border
@@ -41,7 +47,6 @@ function blankList(){//call this at the beggining of each function, it creates a
     }
     temp.push(newRow);
   }
-  temp = border(temp);
   return temp;
 }//could probably be reworked to make a new board? when I get to that?
 
@@ -60,6 +65,28 @@ function border(iHardlyKnower){//creates the border around the whole thing
   return(borderList);
 }
 
+function makeChunkQueue(){
+  var row=[];
+  var list=[];
+  for(var i=0;i<chunkRows;i++){
+    row.push(true);
+  }
+  for(var j=0;j<chunkColumns;j++){
+
+    list.push(copy(row));
+  }
+  return(list);
+}
+
 //keep display() at the bottom please. edit: i forgot why i needed to keep it at the bottom. edit 2: i still dont remember why, anyways, how are you doin? edit 3: hey thanks man, i was having a weird day but i'm feeling really good now, wbu edit 4. why the heck is display at the bottom surely it couldnt matter *that* much
 //"for reasons I do not remember, display() needs to be declared last"
 
+reorderElements()
+//change the order of the buttons
+//6+(i*5)
+function reorderElements(){
+  for(var i=0;i<buttonOrder.length;i++){
+    var b = document.getElementById(buttonOrder[i]);
+    b.style.top=6+(i*5)+"%";
+  }
+}

@@ -1,4 +1,4 @@
-function draw(a,b){  
+function draw(a,b){
     var cell = elementList[board[a][b]];
     if(board[a][b] != 'paint'){
       setFillColor(cell.colors[randomNumber(cell.colors.length)]); 
@@ -9,39 +9,34 @@ function draw(a,b){
 
     //probably like THE most important line of code in the whole program
     rectangle(a*cellSize, b*cellSize, cellSize, cellSize);
-    hasAnythingHappened=true;
 
-    if(false){
-    chunkQueue[getChunk(a)][getChunk(b)]=true;
+    hasAnythingHappened=true;
     
-    
-    
-    //gets chunks of nearby
-    if(board[a][b]!=0){
-    //this math is messy... could probably optimize this somewhere...
-      if((a%5) > 2 && chunkX != 11){//right 
-        chunkQueue[chunkX+1][chunkY] = true;
-      } 
-      else if ((a%5) < 2 && chunkX != 0){
-        chunkQueue[chunkX-1][chunkY] = true;
-      }
-      if((b%5) > 2 && chunkY != 15){ //down
-        chunkQueue[chunkX][chunkY+1] = true;
-      } 
-      else if ((b%5)<2 && chunkY != 0){//up
-        chunkQueue[chunkX][chunkY-1] = true;
-      }
-    }
-    }
+    updateChunk(a-2,b);
+    updateChunk(a+2,b)
+    updateChunk(a,b+2)
+    updateChunk(a,b-2)
   }
+
 
 
 //display is to display the whole board. only call this function once (unless changing boards).
 function display(){
-  setActiveCanvas("canvas");
   for(var x = 0; x<columns; x++){
     for(var y = 0; y<rows; y++){
       draw(x,y);
+    }
+  }
+}
+
+//like display, only cooler. no, it draws the whole board but only the elements that have different values in board vs altBoard. useful for when youve just updated a lot of the board and need to draw a lot of things at once
+function smartDisplay(altBoard){
+  for(var x = 0; x<columns; x++){
+    for(var y = 0; y<rows; y++){
+      if(altBoard[x][y]!=board[x][y]){
+        draw(x,y);
+        
+      }
     }
   }
 }
@@ -53,4 +48,6 @@ function mask(a,b,color){
   hasAnythingHappened=true;
 } 
 
+//why *here*
+setActiveCanvas("canvas");
 display();
